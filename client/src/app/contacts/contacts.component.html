@@ -1,0 +1,8 @@
+<app-top></app-top>
+<div [ngStyle]="{'position':'relative','top':'60px'}">
+  <mat-card fxLayout="column" fxLayoutAlign="center center" *ngFor="let con of contacts" fxFlex="60">
+      <div fxFlex="100">
+        {{con.key}}
+      </div>
+  </mat-card>
+</div>
