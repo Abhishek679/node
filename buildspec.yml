@@ -10,7 +10,7 @@ phases:
 
   pre_build:
     commands:
-      - golint -set_exit_status
+#       - golint -set_exit_status
 
   build:
     commands:
