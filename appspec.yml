@@ -1,0 +1,37 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /tmp/
+hooks:
+  AfterInstall:
+    - location: scripts/install_dependencies
+      timeout: 100
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_server
+      timeout: 100
+      runas: root
+      
+#!/bin/bash
+cd /tmp/
+
+curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
+yum install -y gcc-c++ make
+yum install -y nodejs npm
+
+npm install -g pm2
+npm install
+
+#!/bin/bash
+cd /tmp/
+
+isExistApp = `pgrep httpd`
+if [[ -n  $isExistApp ]]; then
+    service httpd stop
+fi
+
+yum remove -y httpd
+
+# pm2 delete all
+# pm2 start server.js
