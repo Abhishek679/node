@@ -1,25 +1,26 @@
 version: 0.1
 
-phases:  
-  install:
-    commands:
-#       - go get -u github.com/golang/lint/golint
-#       - go get -u github.com/crielly/mongosnap/logger
-#       - go get -u github.com/rlmcpherson/s3gof3r
-#       - go get -u github.com/docopt/docopt-go
-
-  pre_build:
-    commands:
-#       - golint -set_exit_status
-
-  build:
-    commands:
-      - echo Build started on `date`
-      - echo Compiling the Golang binary...
-#       - go build -o mongosnap
-  post_build:
-    commands:
-      - echo Build completed on `date`
+env:
+    variables:
+        CACHE_CONTROL: "86400"
+        S3_BUCKET: "codepipeline-us-west-2-459386220226"
+        BUILD_FOLDER: "/var/www/html/"
+        BUILD_ENV: "prod"
+        
+phases:
+    install:
+        commands:
+            - echo Installing source NPM dependencies
+            - npm install
+            - npm install -g @angular/cli
+    build:
+        commands:
+#             - echo Build started on `date`
+            - ng build --${BUILD_ENV}
+    post_build:
+         commands:
+- aws s3 cp s3://codepipeline-us-west-2-912126109439/test22  /var/www/html --acl public-read-write --cache-control "max-age=${CACHE_CONTROL}"
+- echo Build completed on `date`
 artifacts:  
   files:
 #     - mongosnap
